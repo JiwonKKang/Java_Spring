@@ -8,13 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "requestHeaderServlet", urlPatterns = "/request-header")
+//헤더 정보조회
 public class RequestHeaderServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         extracted(request);
     }
 
-    private static void extracted(HttpServletRequest request) {  
+    private static void extracted(HttpServletRequest request) {
         System.out.println("--- REQUEST-LINE - start ---");
         System.out.println("request.getMethod() = " + request.getMethod()); //GET
         System.out.println("request.getProtocol() = " + request.getProtocol()); //HTTP/1.1
