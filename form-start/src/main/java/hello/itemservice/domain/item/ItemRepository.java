@@ -1,6 +1,7 @@
 package hello.itemservice.domain.item;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 public class ItemRepository {
 
     private static final Map<Long, Item> store = new HashMap<>(); //static
+
     private static long sequence = 0L; //static
 
     public Item save(Item item) {
@@ -32,6 +34,10 @@ public class ItemRepository {
         findItem.setItemName(updateParam.getItemName());
         findItem.setPrice(updateParam.getPrice());
         findItem.setQuantity(updateParam.getQuantity());
+        findItem.setOpen(updateParam.getOpen());
+        findItem.setRegions(updateParam.getRegions());
+        findItem.setDeliveryCode(updateParam.getDeliveryCode());
+        findItem.setItemType(updateParam.getItemType());
     }
 
     public void clearStore() {
