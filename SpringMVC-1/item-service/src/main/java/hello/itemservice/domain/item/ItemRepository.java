@@ -11,6 +11,7 @@ import java.util.Map;
 public class ItemRepository {
 
     private static final Map<Long, Item> store = new HashMap<>();
+
     private static Long sequence = 1L;
 
     public Item save(Item item) {
@@ -19,22 +20,19 @@ public class ItemRepository {
         return item;
     }
 
+    public ArrayList<Item> findAll() {
+        ArrayList<Item> items = new ArrayList<>(store.values());
+        return items;
+    }
+
     public Item findById(Long id) {
         return store.get(id);
     }
 
-    public List<Item> findAll() {
-        return new ArrayList<>(store.values());
-    }
-
-    public void update(Long itemId, Item updateParam) {
-        Item findItem = findById(itemId);
-        findItem.setItemName(updateParam.getItemName());
-        findItem.setPrice(updateParam.getPrice());
-        findItem.setQuantity(updateParam.getQuantity());
-    }
-
-    public void clearStore() {
-        store.clear();
+    public void update(Long id, Item updateParam) {
+        Item item = store.get(id);
+        item.setItemName(updateParam.getItemName());
+        item.setPrice(updateParam.getPrice());
+        item.setQuantity(updateParam.getQuantity());
     }
 }

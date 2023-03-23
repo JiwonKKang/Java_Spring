@@ -11,10 +11,6 @@ public class Item {
     private Integer price;
     private Integer quantity;
 
-    public Item() {
-
-    }
-
     public Item(String itemName, Integer price, Integer quantity) {
         this.itemName = itemName;
         this.price = price;

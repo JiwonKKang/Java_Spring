@@ -9,40 +9,43 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.lang.reflect.Member;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/basic/items")
 @RequiredArgsConstructor
 public class BasicItemController {
+
+
     private final ItemRepository itemRepository;
 
     @GetMapping
     public String items(Model model) {
-        List<Item> items = itemRepository.findAll();
+        ArrayList<Item> items = itemRepository.findAll();
         model.addAttribute("items", items);
         return "basic/items";
     }
 
     @GetMapping("/{itemId}")
-    public String item(@PathVariable long itemId, Model model) {
+    public String item(@PathVariable Long itemId, Model model) {
         Item findItem = itemRepository.findById(itemId);
         model.addAttribute("item", findItem);
         return "basic/item";
     }
 
-    @PostMapping("/add") //PRG사용 새로고침해도 데이터가 계속해서 안생김
-    public String save(@ModelAttribute Item item, RedirectAttributes redirectAttributes) {
-        Item saveItem = itemRepository.save(item);
-        redirectAttributes.addAttribute("itemId", saveItem.getId());
-        redirectAttributes.addAttribute("status", true);
-        //model.addAttribute("item", saveItem);
-        return "redirect:/basic/items/{itemId}";
+    @GetMapping("/add")
+    public String addForm() {
+        return "basic/addForm";
     }
 
-    @GetMapping("/add")
-    public String add() {
-        return "basic/addForm";
+    @PostMapping("/add")
+    public String save(@ModelAttribute Item item, RedirectAttributes redirectAttributes) {
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/basic/items/{itemId}";
     }
 
     @GetMapping("/{itemId}/edit")
@@ -52,16 +55,16 @@ public class BasicItemController {
         return "basic/editForm";
     }
 
-    @PostMapping("/{itemId}/edit")
-    public String update(@PathVariable Long itemId, @ModelAttribute Item item) {
+    @PostMapping("{itemId}/edit")
+    public String editSaved(@ModelAttribute Item item, @PathVariable Long itemId, RedirectAttributes redirectAttributes) {
         itemRepository.update(itemId, item);
+        redirectAttributes.addAttribute("editComplete", true);
         return "redirect:/basic/items/{itemId}";
     }
 
     @PostConstruct
     public void init() {
-
-        itemRepository.save(new Item("testA", 10000, 10));
-        itemRepository.save(new Item("testB", 20000, 20));
+        itemRepository.save(new Item("상품A", 10000, 10));
+        itemRepository.save(new Item("상품B", 20000, 20));
     }
 }
