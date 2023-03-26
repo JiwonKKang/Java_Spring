@@ -2,9 +2,8 @@ package hello.itemservice.web.validation;
 
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
-import hello.itemservice.domain.item.SaveCheck;
-import hello.itemservice.domain.item.UpdateCheck;
 import hello.itemservice.web.validation.form.ItemSaveForm;
+import hello.itemservice.web.validation.form.ItemUpdateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -45,9 +44,9 @@ public class ValidationItemControllerV4 {
     }
 
     @PostMapping("/add")
-    public String addItem(@Validated(SaveCheck.class) @ModelAttribute("item") ItemSaveForm form, /*@Validator 애노테이션이 붙어있으면 Validator가 등록되어있는지
+    public String addItem(@Validated @ModelAttribute("item") ItemSaveForm form, /*@Validator 애노테이션이 붙어있으면 Validator가 등록되어있는지
                                                                     확인하고 다 뒤져서 supports를 통해 검증가능한 Validator가 있다면 검증실행*/
-                            BindingResult bindingResult,//Map errors의 역할
+                            BindingResult bindingResult,//Request파라미터가 Item객체에 바인딩된 결과(오류)를 가지고있다.
                           RedirectAttributes redirectAttributes,
                           Model model) {
 
@@ -80,15 +79,17 @@ public class ValidationItemControllerV4 {
     }
 
     @PostMapping("/{itemId}/edit")
-    public String edit(@PathVariable Long itemId, @Validated(UpdateCheck.class) @ModelAttribute Item item, BindingResult bindingResult) {
+    public String edit(@PathVariable Long itemId, @Validated @ModelAttribute("item") ItemUpdateForm updateForm, BindingResult bindingResult) {
 
-        if (item.getPrice() != null && item.getQuantity() != null) {
-            long result = (long) item.getPrice() * item.getQuantity();
+        if (updateForm.getPrice() != null && updateForm.getQuantity() != null) {
+            long result = (long) updateForm.getPrice() * updateForm.getQuantity();
 
             if (result < 10000) {
                 bindingResult.reject("totalPriceMin", new Object[]{10000, result}, null);
             }
         }
+
+        Item item = new Item(updateForm.getItemName(), updateForm.getPrice(), updateForm.getQuantity());
 
         if (bindingResult.hasErrors()) {
             log.info("errors = {}", bindingResult);
