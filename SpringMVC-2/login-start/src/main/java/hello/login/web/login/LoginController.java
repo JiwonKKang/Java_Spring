@@ -2,7 +2,7 @@ package hello.login.web.login;
 
 import hello.login.domain.login.LoginService;
 import hello.login.domain.member.Member;
-import hello.login.web.session.SessionManager;
+import hello.login.web.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -11,10 +11,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @Slf4j
@@ -22,15 +24,18 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginController {
 
     private final LoginService loginService;
-    private final SessionManager sessionManager;
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
         return "login/loginForm";
     }
 
+
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletResponse response) {
+    public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm,
+                        @RequestParam(defaultValue = "/") String redirectURL,
+                        BindingResult bindingResult,
+                        HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return "login/loginForm";
         }
@@ -42,22 +47,22 @@ public class LoginController {
             return "login/loginForm";
         }
 
-        //로그인 성공 처리 TODO
-        sessionManager.createSession(loginMember, response);
+        //로그인 성공 처리
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
 
+        //세션은 어차피 보안을 위해 그 사용자가 맞는지 확인하기 위한 임의의 랜던값이다.
+        //만약에 request 에 세션이 이미 있다면 그 세션이 서버에 이미 저장되어있는지 검색하고 만약 있다면 그걸 재활용하고 없다면 세션을 새로만들어 서버에 저장한다.
 
-        return "redirect:/";
+        return "redirect:" + redirectURL;
     }
 
     @PostMapping("/logout")
     public String logout(HttpServletRequest request) {
-        sessionManager.expire(request);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
         return "redirect:/";
-    }
-
-    private static void expireCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
     }
 }
