@@ -32,15 +32,17 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm,
-                        @RequestParam(defaultValue = "/") String redirectURL,
+    public String login(@Validated @ModelAttribute("loginForm") LoginForm form,
                         BindingResult bindingResult,
+                        @RequestParam(defaultValue = "/") String redirectURL,
                         HttpServletRequest request) {
+
         if (bindingResult.hasErrors()) {
+            log.info("error = {}", bindingResult);
             return "login/loginForm";
         }
 
-        Member loginMember = loginService.login (loginForm.getLoginId(),loginForm.getPassword());
+        Member loginMember = loginService.login (form.getLoginId(),form.getPassword());
 
         if (loginMember == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
