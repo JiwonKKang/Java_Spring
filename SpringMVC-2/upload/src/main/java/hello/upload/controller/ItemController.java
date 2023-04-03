@@ -37,13 +37,13 @@ public class ItemController {
 
     @PostMapping("/items/new")
     public String saveItem(@ModelAttribute ItemForm itemForm, RedirectAttributes redirectAttributes) throws IOException {
-        UploadFile attachFile = fileStore.storeFile(itemForm.getAttachFile());
-        List<UploadFile> storeImageFiles = fileStore.storeFiles(itemForm.getImageFiles());
+        UploadFile uploadFile = fileStore.storeFile(itemForm.getAttachFile());
+        List<UploadFile> imageFiles = fileStore.storeFiles(itemForm.getImageFiles());
 
         Item item = new Item();
         item.setItemName(itemForm.getItemName());
-        item.setAttachFile(attachFile);
-        item.setImageFiles(storeImageFiles);
+        item.setAttachFile(uploadFile);
+        item.setImageFiles(imageFiles);
         itemRepository.save(item);
 
         redirectAttributes.addAttribute("itemId", item.getId());
@@ -53,30 +53,30 @@ public class ItemController {
 
     @GetMapping("/items/{itemId}")
     public String items(@PathVariable Long itemId, Model model) {
-        Item findItem = itemRepository.findById(itemId);
-        model.addAttribute("item", findItem);
 
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
         return "item-view";
     }
 
-    @ResponseBody
-    @GetMapping("/images/{fileName}")
-    public Resource downloadImage(@PathVariable String fileName) throws MalformedURLException {
-        return new UrlResource("file:" + fileStore.getFullPath(fileName));//이 경로에 있는 파일에 접근
+    @GetMapping("/images/{filename}")
+    public ResponseEntity<Resource> uploadImage(@PathVariable String filename) throws MalformedURLException {
+
+        UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(filename));
+        return ResponseEntity.ok().body(resource);
     }
 
     @GetMapping("/attach/{itemId}")
-    public ResponseEntity<Resource> downloadAttach(@PathVariable Long itemId) throws MalformedURLException {
+    public ResponseEntity<Resource> uploadFile(@PathVariable Long itemId) throws MalformedURLException {
         Item item = itemRepository.findById(itemId);
-        String uploadFileName = item.getAttachFile().getUploadFileName();
-        String storeFileName = item.getAttachFile().getStoreFileName();
+        UploadFile attachFile = item.getAttachFile();
+        String uploadFileName = attachFile.getUploadFileName();
+        String storeFileName = attachFile.getStoreFileName();
 
         UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(storeFileName));
 
-        String encode = UriUtils.encode(uploadFileName, StandardCharsets.UTF_8);
-
-        String contentDisposition = "attachment; filename=\"" + encode + "\"";
-
+        String encodedName = UriUtils.encode(uploadFileName, StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename:\"" + encodedName + "\"";
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .body(resource);
