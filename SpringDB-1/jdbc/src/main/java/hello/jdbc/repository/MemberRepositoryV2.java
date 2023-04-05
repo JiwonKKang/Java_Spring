@@ -1,7 +1,5 @@
 package hello.jdbc.repository;
 
-import com.zaxxer.hikari.HikariDataSource;
-import hello.jdbc.connection.DBConnectionUtil;
 import hello.jdbc.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +9,12 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.NoSuchElementException;
 
+/**
+ * jdbc connection을 파라미터
+ */
 @Slf4j
 @RequiredArgsConstructor
-public class MemberRepositoryV1 {
+public class MemberRepositoryV2 {
 
 
     private final DataSource dataSource;
@@ -77,6 +78,54 @@ public class MemberRepositoryV1 {
 
     }
 
+    public Member findById(Connection connection, String memberId) {
+        String sql = "select * from member where member_id = ?";
+
+        PreparedStatement psmt = null;
+        ResultSet rs = null;
+
+
+        try {
+            psmt = connection.prepareStatement(sql);
+            psmt.setString(1, memberId);
+
+            rs = psmt.executeQuery();
+            if (rs.next()) {//처음에는 아무것도 안가르키다가 next를 한번 호출해주면 데이터가 있는지 없는지 확인
+                Member member = new Member();
+                member.setMemberId(rs.getString("member_id"));
+                member.setMoney(rs.getInt("money"));
+                return member;
+            } else {
+                throw new NoSuchElementException("member not found memberId=" + memberId);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }  finally {
+            JdbcUtils.closeResultSet(rs);
+            JdbcUtils.closeStatement(psmt);
+        }
+
+    }
+
+    public void update(Connection connection, String memberId, int money) throws SQLException {
+        String sql = "update member set money=? where member_id=?";
+
+        PreparedStatement pstmt = null;
+
+        try {
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, money);
+            pstmt.setString(2, memberId);
+            int resultSize = pstmt.executeUpdate();
+            log.info("resultSize {}", resultSize);
+        } catch (SQLException e) {
+            log.info("db error", e);
+            throw e;
+        } finally {
+            JdbcUtils.closeStatement(pstmt);
+        }
+    }
+
     public void update(String memberId, int money) throws SQLException {
         String sql = "update member set money=? where member_id=?";
 
@@ -117,7 +166,7 @@ public class MemberRepositoryV1 {
             close(connection, pstmt, null);
         }
     }
-    
+
 
     private Connection getConnection() throws SQLException {
         return dataSource.getConnection();
