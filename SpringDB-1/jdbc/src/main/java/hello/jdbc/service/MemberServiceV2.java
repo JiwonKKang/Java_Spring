@@ -23,7 +23,7 @@ public class MemberServiceV2 {
 
         try {
             con.setAutoCommit(false);
-            bizLogic(con, fromId, toId, money);
+            bizLogic(con, fromId, toId, money);//역할이 다를경우 메소드를 따로빼서 정확히 무슨역할을하는지 알수있게함
             con.commit();
         } catch (Exception e) {
             con.rollback();
