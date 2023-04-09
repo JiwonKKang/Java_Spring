@@ -2,6 +2,7 @@ package hello.jdbc.service;
 
 import hello.jdbc.domain.Member;
 import hello.jdbc.repository.MemberRepositoryV3;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,13 +14,10 @@ import java.sql.SQLException;
  */
 
 @Slf4j
+@RequiredArgsConstructor
 public class MemberServiceV3_3 {
 
     private final MemberRepositoryV3 memberRepository;
-
-    public MemberServiceV3_3(MemberRepositoryV3 memberRepository) {
-        this.memberRepository = memberRepository;
-    }
 
     @Transactional
     public void accountTransfer(String fromId, String toId, int money) throws SQLException {
