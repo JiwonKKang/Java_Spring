@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
  *JdbcTemplate사용
  */
 @Slf4j
-public class MemberRepositoryV5 implements MemberRepository{
+public class MemberRepositoryV5 implements MemberRepository {
 
 
    private final JdbcTemplate template;
@@ -47,8 +47,7 @@ public class MemberRepositoryV5 implements MemberRepository{
             return member;
         };
     }
-
-
+    
     public void update(String memberId, int money) {
         String sql = "update member set money=? where member_id=?";
         template.update(sql, money, memberId);
