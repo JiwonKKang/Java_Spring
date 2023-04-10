@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.NoSuchElementException;
 
 /**
- *JdbcTemplate사용
+ *JdbcTemplate 사용
  */
 @Slf4j
 public class MemberRepositoryV5 implements MemberRepository {
