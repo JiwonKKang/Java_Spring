@@ -49,7 +49,7 @@ public class JdbcTemplateItemRepositoryV2 implements ItemRepository {
         long key = keyHolder.getKey().longValue();
         item.setId(key);
         return item;
-    }//4/17
+    }//4/18
 
     @Override
     public void update(Long itemId, ItemUpdateDto updateParam) {//
