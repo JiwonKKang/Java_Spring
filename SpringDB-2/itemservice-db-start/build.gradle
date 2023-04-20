@@ -24,7 +24,8 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+	//JPA, 스프링 데이터 JPA 추가
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	//MyBatis 추가
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
 
