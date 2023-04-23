@@ -58,7 +58,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void findItems() {// 운영체제 시험땜에 어쩔수없다.
+    void findItems() {// 오늘도 난 운영체제를 한다.
         //given
         Item item1 = new Item("itemA-1", 10000, 10);
         Item item2 = new Item("itemA-2", 20000, 20);
