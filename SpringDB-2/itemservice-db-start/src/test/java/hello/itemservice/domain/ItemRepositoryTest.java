@@ -58,7 +58,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void findItems() {// 오늘도 난 운영체제를 한다.
+    void findItems() {// 오늘은 웹소프트웨어 공부... 진짜 1시간이라도 해야하는데...
         //given
         Item item1 = new Item("itemA-1", 10000, 10);
         Item item2 = new Item("itemA-2", 20000, 20);
