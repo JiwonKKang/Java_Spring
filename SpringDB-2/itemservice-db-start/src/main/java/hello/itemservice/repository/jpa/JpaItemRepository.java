@@ -43,7 +43,7 @@ public class JpaItemRepository implements ItemRepository {
         return Optional.ofNullable(item);
     }
 
-    @Override
+    @Override//Computer Network
     public List<Item> findAll(ItemSearchCond cond) {
         String jpql = "select i from Item i";
         Integer maxPrice = cond.getMaxPrice();
