@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 import java.sql.Driver;
 
 @Slf4j
-@Import(JpaConfig.class)
+@Import(SpringDataJpaConfig.class)
 @SpringBootApplication(scanBasePackages = "hello.itemservice.web")
 public class ItemServiceApplication {
 
@@ -27,5 +27,4 @@ public class ItemServiceApplication {
 	public TestDataInit testDataInit(ItemRepository itemRepository) {
 		return new TestDataInit(itemRepository);
 	}
-
 }

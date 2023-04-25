@@ -3,16 +3,10 @@ package hello.itemservice.domain;
 import hello.itemservice.repository.ItemRepository;
 import hello.itemservice.repository.ItemSearchCond;
 import hello.itemservice.repository.ItemUpdateDto;
-import hello.itemservice.repository.memory.MemoryItemRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.List;
 
@@ -58,7 +52,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void findItems() {//
+    void findItems() {
         //given
         Item item1 = new Item("itemA-1", 10000, 10);
         Item item2 = new Item("itemA-2", 20000, 20);
