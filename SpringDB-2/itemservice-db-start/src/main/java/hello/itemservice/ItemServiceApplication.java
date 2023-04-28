@@ -12,6 +12,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
+import java.util.Date;
 
 @Slf4j
 @Import(SpringDataJpaConfig.class)
@@ -27,4 +28,4 @@ public class ItemServiceApplication {
 	public TestDataInit testDataInit(ItemRepository itemRepository) {
 		return new TestDataInit(itemRepository);
 	}
-}//시험끝났는데 하루만쉬자
+}
