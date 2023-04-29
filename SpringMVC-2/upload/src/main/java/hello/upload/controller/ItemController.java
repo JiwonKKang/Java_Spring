@@ -44,6 +44,7 @@ public class ItemController {
         item.setItemName(itemForm.getItemName());
         item.setAttachFile(uploadFile);
         item.setImageFiles(imageFiles);
+        log.info("item.imageFiles={}", item.getImageFiles());
         itemRepository.save(item);
 
         redirectAttributes.addAttribute("itemId", item.getId());
@@ -56,7 +57,7 @@ public class ItemController {
 
         Item item = itemRepository.findById(itemId);
         model.addAttribute("item", item);
-        return "item-view";
+        return "item-view";//
     }
 
     @GetMapping("/images/{filename}")
