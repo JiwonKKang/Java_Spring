@@ -57,7 +57,7 @@ public class ItemController {
 
         Item item = itemRepository.findById(itemId);
         model.addAttribute("item", item);
-        return "item-view";//
+        return "item-view";
     }
 
     @GetMapping("/images/{filename}")
