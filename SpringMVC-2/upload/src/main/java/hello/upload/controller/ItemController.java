@@ -64,7 +64,7 @@ public class ItemController {
     public ResponseEntity<Resource> uploadImage(@PathVariable String filename) throws MalformedURLException {
 
         UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(filename));
-        return ResponseEntity.ok().body(resource);
+        return ResponseEntity.ok().body(resource);//
     }
 
     @GetMapping("/attach/{itemId}")
