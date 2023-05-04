@@ -80,6 +80,6 @@ public class ItemController {
         String contentDisposition = "attachment; filename:\"" + encodedName + "\"";
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-                .body(resource);//
+                .body(resource);
     }
 }
