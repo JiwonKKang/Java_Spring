@@ -1,7 +1,6 @@
 package hello.itemservice.repository.jpa;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import hello.itemservice.domain.Item;
@@ -18,7 +17,6 @@ import java.util.Optional;
 
 import static hello.itemservice.domain.QItem.*;
 
-@Repository
 @Transactional
 public class JpaItemRepositoryV3 implements ItemRepository {
 
@@ -85,6 +83,13 @@ public class JpaItemRepositoryV3 implements ItemRepository {
                 .fetch();
     }
 
+    private BooleanExpression likeItemName(String itemName) {
+        if (StringUtils.hasText(itemName)) {
+            return item.itemName.like("%" + itemName + "%");
+        }
+        return null;
+    }
+
     private BooleanExpression maxPrice(Integer maxPrice) {
         if (maxPrice != null) {
             return item.price.loe(maxPrice);
@@ -92,10 +97,5 @@ public class JpaItemRepositoryV3 implements ItemRepository {
         return null;
     }
 
-    private BooleanExpression likeItemName(String itemName) {
-        if (StringUtils.hasText(itemName)) {
-           return item.itemName.like("%" + itemName + "%");
-        }
-        return null;
-    }
+
 }

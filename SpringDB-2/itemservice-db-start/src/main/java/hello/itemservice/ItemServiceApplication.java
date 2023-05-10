@@ -15,7 +15,7 @@ import java.sql.Driver;
 import java.util.Date;
 
 @Slf4j
-@Import(QuerydslConfig.class)
+@Import(V2Config.class)
 @SpringBootApplication(scanBasePackages = "hello.itemservice.web")
 public class ItemServiceApplication {
 
